@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.haohao.entity.Book;
 import com.haohao.service.BookService;
 import com.haohao.utils.R;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,9 +57,14 @@ public class BookController {
     }
 
     @GetMapping("{currentPage}/{pageSize}")
-    public R getPage(@PathVariable int currentPage, @PathVariable int pageSize){
+    public R getPage(@PathVariable int currentPage, @PathVariable int pageSize,Book queryBook){
+        //增加book，也就是分页
         Page<Book> page = new Page<>(currentPage, pageSize);
-        page = bookService.page(page);
+        LambdaQueryWrapper<Book> lqw = new LambdaQueryWrapper<>();
+        lqw.like(Strings.isNotEmpty(queryBook.getName()),Book::getName,queryBook.getName());
+        lqw.like(Strings.isNotEmpty(queryBook.getType()),Book::getType,queryBook.getType());
+        lqw.like(Strings.isNotEmpty(queryBook.getDescription()),Book::getDescription,queryBook.getDescription());
+        page = bookService.page(page,lqw);
         R r = new R(true, page);
         return r;
     }
