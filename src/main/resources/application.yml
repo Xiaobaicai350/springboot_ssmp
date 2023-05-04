@@ -1,0 +1,16 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/book?serverTimezone=UTC
+      username: root
+      password: xth
+
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: tbl_        #设置表名通用前缀
+      id-type: auto                #设置主键id字段的生成策略为参照数据库设定的策略，当前数据库设置id生成策略为自增
